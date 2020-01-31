@@ -15,7 +15,7 @@ public class Mahoney : MonoBehaviour, IPlayer
     public float AttackRange;
     public Transform AttackPoint;
     public LayerMask EnemyLayers;
-    
+    public float initialScale = 0.5f;
     
     private void Awake()
     {
@@ -41,18 +41,23 @@ public class Mahoney : MonoBehaviour, IPlayer
     // Update is called once per frame
     void Update()
     {
-        if (InControl) return;
+        if (InControl)
+        {
+            Animator.SetTrigger("Idle");
+            RB2D.velocity = Vector2.zero;
+            return;
+        };
         
         if (Input.Left.IsPressed)
         {
             Animator.SetTrigger("Run");
-            transform.localScale = new Vector2(1, 1);
+            transform.localScale = new Vector2(1 * initialScale, 1 * initialScale);
             RB2D.velocity = Vector2.left * MoveSpeed;
         } 
         else if (Input.Right.IsPressed)
         {
             Animator.SetTrigger("Run");
-            transform.localScale = new Vector2(-1, 1);
+            transform.localScale = new Vector2(-1 * initialScale, 1 * initialScale);
             RB2D.velocity = Vector2.right * MoveSpeed;
         }
         else if (Input.Attack.WasPressed)

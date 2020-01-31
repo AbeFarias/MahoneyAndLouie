@@ -42,7 +42,12 @@ public class Louie : MonoBehaviour, IPlayer
     // Update is called once per frame
     void Update()
     {
-        if (!InControl) return;
+        if (!InControl)
+        {
+            Animator.SetTrigger("Idle");
+            RB2D.velocity = Vector2.zero;
+            return;
+        };
         
         if (Input.Left.IsPressed)
         {

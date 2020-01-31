@@ -8,11 +8,20 @@ public class CombatManager : MonoBehaviour
     public Mahoney Mahoney;
     private bool playerOneInCharge = true;
     // Update is called once per frame
+    void Start()
+    {
+        Louie.InControl = playerOneInCharge;
+        Mahoney.InControl = playerOneInCharge;
+    }
     void Update()
+    {
+        SwapPlayers();
+    }
+    
+    void SwapPlayers()
     {
         if (PlayerInput.Instance.Swap.WasPressed)
         {
-            Debug.Log("Here" + playerOneInCharge);
             playerOneInCharge = !playerOneInCharge;
             Louie.InControl = playerOneInCharge;
             Mahoney.InControl = playerOneInCharge;
