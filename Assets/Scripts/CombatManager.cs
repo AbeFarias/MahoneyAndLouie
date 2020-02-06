@@ -10,23 +10,23 @@ public class CombatManager : MonoBehaviour
     public GameObject MahoneyFloor;
     public GameObject LouieFloor;
 
+    public Vector3 topPos;
+    public Vector3 botPos;
+    
     public float transitionSpeed = 0.6f;
 
     private Vector3 smallScale = new Vector3(0.5f, 0.5f, 1f);
     private Vector3 largeScale = new Vector3(1f,1f,1f);
 
-    private Vector3 newPosForLouie;
-    private Vector3 newPosForMahoney;
+    //private Vector3 topPos = new Vector3(-0.5f, 1.3f, 0);
+    //private Vector3 botPos = new Vector3(0, 0, 0);
     
-    private bool playerOneInCharge = true;
+    private bool LouieInControl = true;
     // Update is called once per frame
     void Start()
     {
-        Louie.InControl = playerOneInCharge;
-        Mahoney.InControl = playerOneInCharge;
-
-        newPosForLouie = MahoneyFloor.transform.position;
-        newPosForMahoney = LouieFloor.transform.position;
+        Louie.InControl = LouieInControl;
+        Mahoney.InControl = LouieInControl;
     }
     void Update()
     {
@@ -37,39 +37,24 @@ public class CombatManager : MonoBehaviour
     {
         if (PlayerInput.Instance.Swap.WasPressed)
         {
-            playerOneInCharge = !playerOneInCharge;
-            Louie.InControl = playerOneInCharge;
-            Mahoney.InControl = playerOneInCharge;
-            StartCoroutine(nameof(SwapFloors));
+            var mahoneyFloorPos = MahoneyFloor.transform.position;
+            var louieFloorPos = LouieFloor.transform.position;
+            var louieFloorScale = LouieFloor.transform.localScale;
+            var mahoneyFloorScale = MahoneyFloor.transform.localScale;
+            
+            LouieInControl = !LouieInControl;
+            Louie.InControl = LouieInControl;
+            Mahoney.InControl = LouieInControl;
+            //StartCoroutine(nameof(SwapFloors));
+
+            StartCoroutine(RepeatLerp(mahoneyFloorPos, LouieInControl ? topPos: botPos, 5, Switcher.MAHONEY_POS));
+            StartCoroutine(RepeatLerp(louieFloorPos, LouieInControl ? botPos: topPos, 5, Switcher.LOUIE_POS));
+            StartCoroutine(RepeatLerp(mahoneyFloorScale, LouieInControl ? smallScale : largeScale, 5, Switcher.MAHONEY_SCALE));
+            StartCoroutine(RepeatLerp(louieFloorScale, LouieInControl ? largeScale : smallScale, 5, Switcher.LOUIE_SCALE));
         }
     }
 
-    IEnumerator SwapFloors()
-    {
-        var mahoneyFloorPos = MahoneyFloor.transform.position;
-        var louieFloorPos = LouieFloor.transform.position;
-        
-        //LouieFloor.transform.position = Vector3.Lerp(louieFloorPos, newPosForLouie, transitionSpeed);
-        //MahoneyFloor.transform.position = Vector3.Lerp(mahoneyFloorPos,newPosForMahoney, transitionSpeed);
-        
-        var louieFloorScale = LouieFloor.transform.localScale;
-        var mahoneyFloorScale = MahoneyFloor.transform.localScale;
-        
-        //yield return RepeatLerp(mahoneyFloorPos, newPosForMahoney, 5, Switcher.MAHONEY_POS);
-        //yield return RepeatLerp(louieFloorPos, newPosForLouie, 5, Switcher.LOUIE_POS);
-        yield return RepeatLerp(mahoneyFloorPos, louieFloorPos, mahoneyFloorScale, louieFloorScale);
-        var temp = newPosForLouie;
-        newPosForLouie = newPosForMahoney;
-        newPosForMahoney = temp;
-        //MahoneyFloor.transform.localScale = Vector3.Lerp(new Vector3(mahoneyFloorScale.x, mahoneyFloorScale.y, mahoneyFloorScale.z), largeScale, transitionSpeed);
-        //LouieFloor.transform.localScale  = Vector3.Lerp(new Vector3(louieFloorScale.x,louieFloorScale.y, louieFloorScale.z),smallScale, transitionSpeed);
-
-        //yield return RepeatLerp(new Vector3(mahoneyFloorScale.x, mahoneyFloorScale.y, mahoneyFloorScale.z), largeScale, 5, Switcher.MAHONEY_POS);
-        //yield return RepeatLerp(new Vector3(louieFloorScale.x,louieFloorScale.y, louieFloorScale.z),smallScale, 5, Switcher.LOUIE_POS);
-        //yield return new WaitForSeconds(10f);
-    }
-
-    /*IEnumerator RepeatLerp(Vector3 a, Vector3 b, float time, Switcher switcher)
+    IEnumerator RepeatLerp(Vector3 a, Vector3 b, float time, Switcher switcher)
     {
         float i = 0.0f;
         float rate = (1.0f / time) * transitionSpeed;
@@ -107,21 +92,6 @@ public class CombatManager : MonoBehaviour
                     yield return null;
                 }
                 break;
-        }
-    }*/
-
-    IEnumerator RepeatLerp(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
-    {
-        float i = 0.0f;
-        float rate = (1.0f / 5.0f) * transitionSpeed;
-        while (i < 1.0f)
-        {
-            i += Time.deltaTime * rate;
-            MahoneyFloor.transform.position = Vector3.Lerp(a,newPosForMahoney, transitionSpeed);
-            LouieFloor.transform.position = Vector3.Lerp(b, newPosForLouie, transitionSpeed);
-            MahoneyFloor.transform.localScale = Vector3.Lerp(c, largeScale, transitionSpeed);
-            LouieFloor.transform.localScale = Vector3.Lerp(d, smallScale, transitionSpeed);   
-            yield return null;
         }
     }
 
