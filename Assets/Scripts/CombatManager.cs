@@ -64,7 +64,7 @@ public class CombatManager : MonoBehaviour
                 while (i < 1.0f)
                 {
                     i += Time.deltaTime * rate;
-                    MahoneyFloor.transform.position = Vector3.Lerp(a, b, i);
+                    MahoneyFloor.transform.position = Vector3.Slerp(a, b, i);
                     yield return null;
                 }
                 break;
@@ -72,7 +72,7 @@ public class CombatManager : MonoBehaviour
                 while (i < 1.0f)
                 {
                     i += Time.deltaTime * rate;
-                    LouieFloor.transform.position = Vector3.Lerp(a, b, i);
+                    LouieFloor.transform.position = Vector3.Slerp(a, b, i);
                     yield return null;
                 }
                 break;
@@ -80,7 +80,7 @@ public class CombatManager : MonoBehaviour
                 while (i < 1.0f)
                 {
                     i += Time.deltaTime * rate;
-                    MahoneyFloor.transform.localScale = Vector3.Lerp(a, b, i);
+                    MahoneyFloor.transform.localScale = Vector3.Slerp(a, b, i);
                     yield return null;
                 }
                 break;
@@ -88,7 +88,7 @@ public class CombatManager : MonoBehaviour
                 while (i < 1.0f)
                 {
                     i += Time.deltaTime * rate;
-                    LouieFloor.transform.localScale = Vector3.Lerp(a, b, i);
+                    LouieFloor.transform.localScale = Vector3.Slerp(a, b, i);
                     yield return null;
                 }
                 break;
