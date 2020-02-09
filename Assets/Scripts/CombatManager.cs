@@ -17,9 +17,7 @@ public class CombatManager : MonoBehaviour
 
     private Vector3 smallScale = new Vector3(0.5f, 0.5f, 1f);
     private Vector3 largeScale = new Vector3(1f,1f,1f);
-
-    //private Vector3 topPos = new Vector3(-0.5f, 1.3f, 0);
-    //private Vector3 botPos = new Vector3(0, 0, 0);
+    
     
     private bool LouieInControl = true;
     // Update is called once per frame

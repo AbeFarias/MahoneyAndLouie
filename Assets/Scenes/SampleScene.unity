@@ -7925,7 +7925,13 @@ MonoBehaviour:
     clip: {fileID: 7400000, guid: f50ea1e86c917ee4a886801ca2d6f4c2, type: 2}
   - key: Attack_End
     clip: {fileID: 7400000, guid: f50ea1e86c917ee4a886801ca2d6f4c2, type: 2}
-  anim: {fileID: 1341046913}
+  - key: Enemy_Hitstun
+    clip: {fileID: 7400000, guid: 22ab788fa3464374b9f8c6f542ca4290, type: 2}
+  anims:
+  - animatorOwner: Player
+    anim: {fileID: 1341046913}
+  - animatorOwner: Enemy
+    anim: {fileID: 834844552}
 --- !u!1 &1559979752
 GameObject:
   m_ObjectHideFlags: 0

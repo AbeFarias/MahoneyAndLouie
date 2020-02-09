@@ -100,7 +100,6 @@ public class Louie : MonoBehaviour, IPlayer
             {
                 enemy.GetComponent<Enemy>().TakeDamage(AttackDamage);
             }
-            CameraManager.CameraInstance.ShakeCamera(0.2f, 0.01f);
         }
 
         public void Attack_End()
