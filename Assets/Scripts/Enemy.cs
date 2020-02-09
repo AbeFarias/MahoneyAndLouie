@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public HitPause hitPause;
     public int health = 100;
     private bool dead;
     
     private Animator _animator;
-
     private BoxCollider2D _collider2D;
     // Start is called before the first frame update
     void Start()
@@ -35,6 +35,7 @@ public class Enemy : MonoBehaviour
     {
         health -= damage;
         _animator.SetTrigger("Damage");
+        hitPause.Freeze();
         if (health <= 0)
         {
             Die();
@@ -43,7 +44,6 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log("Dead");
         dead = true;
         Destroy(_collider2D);
     }

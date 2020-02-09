@@ -15,7 +15,9 @@ public class Mahoney : MonoBehaviour, IPlayer
     public float AttackRange;
     public Transform AttackPoint;
     public LayerMask EnemyLayers;
-    
+    private static readonly int Idle = Animator.StringToHash("Idle");
+    private static readonly int Run = Animator.StringToHash("Run");
+
     private void Awake()
     {
         if (MahoneyInstance == null)
@@ -42,20 +44,20 @@ public class Mahoney : MonoBehaviour, IPlayer
     {
         if (InControl)
         {
-            Animator.SetTrigger("Idle");
+            Animator.SetTrigger(Idle);
             RB2D.velocity = Vector2.zero;
             return;
         };
         
         if (Input.Left.IsPressed)
         {
-            Animator.SetTrigger("Run");
+            Animator.SetTrigger(Run);
             transform.localScale = new Vector2(1, 1);
             RB2D.velocity = Vector2.left * MoveSpeed;
         } 
         else if (Input.Right.IsPressed)
         {
-            Animator.SetTrigger("Run");
+            Animator.SetTrigger(Run);
             transform.localScale = new Vector2(-1, 1);
             RB2D.velocity = Vector2.right * MoveSpeed;
         }
@@ -66,7 +68,7 @@ public class Mahoney : MonoBehaviour, IPlayer
         else
         {
             RB2D.velocity = Vector2.zero;
-            Animator.SetTrigger("Idle");
+            Animator.SetTrigger(Idle);
         }
     }
 

@@ -16,6 +16,11 @@ public class Louie : MonoBehaviour, IPlayer
     public float AttackRange;
     public Transform AttackPoint;
     public LayerMask EnemyLayers;
+
+    private bool _inAttack;
+    private static readonly int AttackAnim = Animator.StringToHash("Attack");
+    private static readonly int Run = Animator.StringToHash("Run");
+    private static readonly int Idle = Animator.StringToHash("Idle");
     public bool InControl { get; set; }
 
     private void Awake()
@@ -44,43 +49,66 @@ public class Louie : MonoBehaviour, IPlayer
     {
         if (!InControl)
         {
-            Animator.SetTrigger("Idle");
+            Animator.SetTrigger(Idle);
             RB2D.velocity = Vector2.zero;
             return;
-        };
+        }
+
+        if (_inAttack)
+        {
+            RB2D.velocity = Vector2.zero;
+            return;
+        }
+
+        if (Input.Attack.IsPressed)
+        {
+            Attack();
+            return;
+        }
         
         if (Input.Left.IsPressed)
         {
-            Animator.SetTrigger("Run");
+            Animator.SetTrigger(Run);
             transform.localScale = new Vector2(1, 1);
             RB2D.velocity = Vector2.left * MoveSpeed;
         } 
         else if (Input.Right.IsPressed)
         {
-            Animator.SetTrigger("Run");
+            Animator.SetTrigger(Run);
             transform.localScale = new Vector2(-1, 1);
             RB2D.velocity = Vector2.right * MoveSpeed;
-        }
-        else if (Input.Attack.WasPressed)
-        {
-            Attack();
         }
         else
         {
             RB2D.velocity = Vector2.zero;
-            Animator.SetTrigger("Idle");
+            Animator.SetTrigger(Idle);
         }
     }
 
     public void Attack()
     {
-        Animator.SetTrigger("Attack");
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, EnemyLayers);
-        foreach (var enemy in hitEnemies)
-        {
-            enemy.GetComponent<Enemy>().TakeDamage(AttackDamage);
-        }
+        _inAttack = true;
+        Animator.SetTrigger(AttackAnim);
     }
+
+    
+    #region AnimationRecieverCalls
+        public void Attack_Middle()
+        {
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, EnemyLayers);
+            foreach (var enemy in hitEnemies)
+            {
+                enemy.GetComponent<Enemy>().TakeDamage(AttackDamage);
+            }
+            CameraManager.CameraInstance.ShakeCamera(0.2f, 0.01f);
+        }
+
+        public void Attack_End()
+        {
+            Animator.SetTrigger(Idle);
+            _inAttack = false;
+        }
+    #endregion
 
     private void OnDrawGizmosSelected()
     {
