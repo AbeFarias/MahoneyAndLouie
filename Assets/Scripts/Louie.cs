@@ -28,7 +28,6 @@ public class Louie : MonoBehaviour, IPlayer
         if (LouieInstance == null)
         {
             LouieInstance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -91,9 +90,14 @@ public class Louie : MonoBehaviour, IPlayer
         Animator.SetTrigger(AttackAnim);
     }
 
+    public void TakeDamage()
+    {
+        Debug.Log("Louie took damage!");
+    }
+
     
     #region AnimationRecieverCalls
-        public void Attack_Middle()
+        public void Louie_Attack_Middle()
         {
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, EnemyLayers);
             foreach (var enemy in hitEnemies)
@@ -102,12 +106,17 @@ public class Louie : MonoBehaviour, IPlayer
             }
         }
 
-        public void Attack_End()
+        public void Louie_Attack_End()
         {
             Animator.SetTrigger(Idle);
             _inAttack = false;
         }
-    #endregion
+        
+        //TODO: Remove these dummy calls once I have more animations
+        public void Mahoney_Attack_Middle() { }
+        public void Mahoney_Attack_End(){ }
+
+        #endregion
 
     private void OnDrawGizmosSelected()
     {

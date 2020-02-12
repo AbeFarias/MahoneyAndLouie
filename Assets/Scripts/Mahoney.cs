@@ -15,15 +15,18 @@ public class Mahoney : MonoBehaviour, IPlayer
     public float AttackRange;
     public Transform AttackPoint;
     public LayerMask EnemyLayers;
+
+    private bool _inAttack;
+    
     private static readonly int Idle = Animator.StringToHash("Idle");
     private static readonly int Run = Animator.StringToHash("Run");
+    private static readonly int Attack1 = Animator.StringToHash("Attack");
 
     private void Awake()
     {
         if (MahoneyInstance == null)
         {
             MahoneyInstance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -47,7 +50,19 @@ public class Mahoney : MonoBehaviour, IPlayer
             Animator.SetTrigger(Idle);
             RB2D.velocity = Vector2.zero;
             return;
-        };
+        }
+
+        if (_inAttack)
+        {
+            RB2D.velocity = Vector2.zero;
+            return;
+        }
+
+        if (Input.Attack.IsPressed)
+        {
+            Attack();
+            return;
+        }
         
         if (Input.Left.IsPressed)
         {
@@ -61,24 +76,46 @@ public class Mahoney : MonoBehaviour, IPlayer
             transform.localScale = new Vector2(-1, 1);
             RB2D.velocity = Vector2.right * MoveSpeed;
         }
-        else if (Input.Attack.WasPressed)
-        {
-            Attack();
-        }
         else
         {
             RB2D.velocity = Vector2.zero;
             Animator.SetTrigger(Idle);
         }
     }
-
-    public void Attack()
+    
+    #region AnimationRecieverCalls
+    public void Mahoney_Attack_Middle()
     {
-        Animator.SetTrigger("Attack");
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, EnemyLayers);
         foreach (var enemy in hitEnemies)
         {
-            enemy.GetComponent<Enemy>().TakeDamage(AttackDamage);
+            Debug.Log(enemy.name);
+            if (enemy.GetComponent<Enemy>().AttackParryable)
+            {
+                Debug.Log("Triggered");
+                enemy.GetComponent<Enemy>().TakeDamage(250);
+            }
         }
+    }
+
+    public void Mahoney_Attack_End()
+    {
+        Animator.SetTrigger(Idle);
+        _inAttack = false;
+    }
+
+    //TODO: Remove these two dummy calls once I have more animations
+    public void Louie_Attack_Middle() { }
+    public void Louie_Attack_End() { }
+    #endregion
+
+    public void Attack()
+    {
+        Animator.SetTrigger(Attack1);
+    }
+
+    public void TakeDamage()
+    {
+        Debug.Log("Mahoney took damage!");
     }
 }
