@@ -56,72 +56,50 @@ public class AnimationEventHandler : MonoBehaviour
         {
             // Use this case for damaging enemy as Louie
             case ("Louie_Attack_Middle"):
-                var louieAttackMiddleAnim = animOwners["Louie"].runtimeAnimatorController.animationClips[0];
-                events[key].time = louieAttackMiddleAnim.length * 0.5f;
-                events[key].functionName = "Louie_Attack_Middle";
-                clips[key] = louieAttackMiddleAnim;
-                clips[key].AddEvent(events[key]);
+                AddToEvents(key, "Louie", 0, 0.5f, "Louie_Attack_Middle");
                 break;
             // Use this case for resetting Louie's position after attack
             case("Louie_Attack_End"):
-                var louieAttackEnd = animOwners["Louie"].runtimeAnimatorController.animationClips[0];
-                events[key].time = louieAttackEnd.length * 0.9f;
-                events[key].functionName = "Louie_Attack_End";
-                clips[key] = louieAttackEnd;
-                clips[key].AddEvent(events[key]);
+                AddToEvents(key, "Louie", 0, 0.9f, "Louie_Attack_End");
                 break;
             // Use this case for PARRYING enemies as Mahoney
             case ("Mahoney_Attack_Middle"):
-                var mahoneyAttackMiddle = animOwners["Mahoney"].runtimeAnimatorController.animationClips[0];
-                events[key].time = mahoneyAttackMiddle.length * 0.5f;
-                events[key].functionName = "Mahoney_Attack_Middle";
-                clips[key] = mahoneyAttackMiddle;
-                clips[key].AddEvent(events[key]);
+                AddToEvents(key, "Mahoney", 0, 0.5f, "Mahoney_Attack_Middle");
                 break;
             // Use this case for resetting animation for Mahoney after parry animation
             case("Mahoney_Attack_End"):
-                var mahoneyAttackEnd = animOwners["Mahoney"].runtimeAnimatorController.animationClips[0];
-                events[key].time = mahoneyAttackEnd.length * 0.9f;
-                events[key].functionName = "Mahoney_Attack_End";
-                clips[key] = mahoneyAttackEnd;
-                clips[key].AddEvent(events[key]);
+                AddToEvents(key, "Mahoney", 0, 0.9f, "Mahoney_Attack_End");
                 break;
             
             // Use this case hitting enemy
             case("Enemy_Hitstun"):
-                var enemyHitStunAnim = animOwners["Enemy"].runtimeAnimatorController.animationClips[2];
-                events[key].time = enemyHitStunAnim.length * 0.5f;
-                events[key].functionName = "Enemy_Damage";
-                clips[key] = enemyHitStunAnim;
-                clips[key].AddEvent(events[key]);
+                AddToEvents(key, "Enemy", 2, 0.5f, "Enemy_Damage");
                 break;
             
             // Mainly used for creating the parry window
+            // TODO: Investigate bug where the index of this one doesn't matter.
             case("Enemy_Attack_Begin"):
-                var enemyAttackBegin = animOwners["Enemy"].runtimeAnimatorController.animationClips[3];
-                events[key].time = enemyAttackBegin.length * 0.1f;
-                events[key].functionName = "Enemy_Attack_Begin";
-                clips[key] = enemyAttackBegin;
-                clips[key].AddEvent(events[key]);
+                AddToEvents(key, "Enemy", 3, 0.2f, "Enemy_Attack_Begin");
                 break;
             
             // Mainly used for closing the parry window and attack reg
             case("Enemy_Attack_Middle"):
-                var enemyAttackAnim = animOwners["Enemy"].runtimeAnimatorController.animationClips[3];
-                events[key].time = enemyAttackAnim.length * 0.6f;
-                events[key].functionName = "Enemy_Attack";
-                clips[key] = enemyAttackAnim;
-                clips[key].AddEvent(events[key]);
+                AddToEvents(key, "Enemy", 3, 0.5f, "Enemy_Attack");
                 break;
             
             // Use this to reset enemy animation after attack
             case("Enemy_Attack_End"):
-                var enemyAttackEndAnim = animOwners["Enemy"].runtimeAnimatorController.animationClips[1];
-                events[key].time = enemyAttackEndAnim.length * 0.9f;
-                events[key].functionName = "Enemy_Attack_End";
-                clips[key] = enemyAttackEndAnim;
-                clips[key].AddEvent(events[key]);
+                AddToEvents(key, "Enemy", 3, 0.9f, "Enemy_Attack_End");
                 break;
         }
+    }
+
+    private void AddToEvents(string key, string owner, int index, float triggerTime, string functionName)
+    {
+        var anim = animOwners[owner].runtimeAnimatorController.animationClips[index];
+        events[key].time = anim.length * triggerTime;
+        events[key].functionName = functionName;
+        clips[key] = anim;
+        clips[key].AddEvent(events[key]);
     }
 }
