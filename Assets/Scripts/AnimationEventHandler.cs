@@ -26,7 +26,7 @@ public class AnimationEventHandler : MonoBehaviour
     private Dictionary<string, AnimationEvent> events = new Dictionary<string, AnimationEvent>();
     private Dictionary<string, AnimationClip> clips = new Dictionary<string, AnimationClip>();
     private Dictionary<string, Animator> animOwners = new Dictionary<string, Animator>();
-    // Start is called before the first frame update
+    // Start is called before the first frame update slurp
     void Start()
     {
         foreach (var data in info.ToList())
